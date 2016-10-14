@@ -124,7 +124,7 @@ def evaluate(node):
 # 主程序
 if __name__ == '__main__':
     # 输入表达式
-    input = raw_input('Input:')
+    input = input('Input:')
     # 将字符串拆解成list存储到tokens中，诸如tokens=[('int',4),('ope','+'),('int',6)]
     tokens = tokenize(input)
     # 根据tokens，生成二叉树存入node中
