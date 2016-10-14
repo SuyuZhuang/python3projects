@@ -1,5 +1,7 @@
+# -*- coding:utf-8 -*-
+
 class Buffer(object):
-    def __init__(self,data):
+    def __init__(self, data):
         self.data = data
         self.offset = 0
     def peek(self):
@@ -51,6 +53,8 @@ class NodeBinaryOp(node):
         self.left = None
         self.right = None
 
+
+
 def tokenize(string):
     buffer = Buffer(string)
     tk_int = TokenInt()
@@ -68,15 +72,18 @@ def tokenize(string):
             raise ValueError("Error in syntax")
             
     return tokens
-    
+
+
+# 生成二叉树
 def parse(tokens):
     if tokens[0][0] != "int":
         raise ValueError("Must Start with an int")
     node = NodeInt(tokens[0][1])
     nbo = None
     last = tokens[0][0]
-
+    # 从第二个元素开始循环
     for token in tokens[1:]:
+        # 如果相邻的两个token的类型相同，则错误
         if token[0] == last:
             raise ValueError("Error in syntax")
         last = token[0]
@@ -89,12 +96,16 @@ def parse(tokens):
     return node
 
 
+
+# 使用递归的方法计算
 def calculate(nbo):
+    # 如果nbo的左节点是二叉树，则递归计算左节点，直到左节点不是二叉树（整数）
     if isinstance(nbo.left, NodeBinaryOp):
         leftval = calculate(nbo.left)
     else:
         leftval = nbo.left.value
 
+    # 判断节点符号
     if nbo.kind == "-":
         return leftval - nbo.right.value
     if nbo.kind == "+":
@@ -103,17 +114,20 @@ def calculate(nbo):
         raise ValueError("Wrong operator")
 
 def evaluate(node):
-
+    # 先判断二叉树是否只含有一个整数，若是则输出该值
     if isinstance(node, NodeInt):
         return node.value
     else:
         return calculate(node)
 
 
-
+# 主程序
 if __name__ == '__main__':
+    # 输入表达式
     input = raw_input('Input:')
+    # 将字符串拆解成list存储到tokens中，诸如tokens=[('int',4),('ope','+'),('int',6)]
     tokens = tokenize(input)
+    # 根据tokens，生成二叉树存入node中
     node = parse(tokens)
+    # 计算并输出
     print ('Result:'+str(evaluate(node)))
-    
